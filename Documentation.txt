@@ -1,0 +1,18 @@
+ Postgres url : localhost:5432
+ Postgres username: postgres
+ Postgres password: postgres
+ Postgres db: smarthiredb
+
+ Consul api url : localhost:8500
+
+ Vault api url : localhost:8200
+ Vault unseal and token : (auto generated in the credentials file)
+
+ Minio api url : 127.0.0.1:9000
+ Minio access-key : 123456789
+ Minio pass-key : 123456789
+ Minio bucket name : smarthirebucket
+
+ Api Gateway url : localhost:9999
+
+

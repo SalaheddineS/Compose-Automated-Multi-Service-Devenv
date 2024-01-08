@@ -1,0 +1,95 @@
+version: '3'
+
+services:
+
+  gateway:
+    image: salaheddine122/gateway-service:1.0.0
+    depends_on:
+        - consul
+    container_name: gateway
+    restart: always
+    network_mode: host
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: 123456789
+      MINIO_ROOT_PASSWORD: 123456789
+      MINIO_ACCESS_KEY: 123456789
+      MINIO_SECRET_KEY: 123456789
+    networks:
+      - minio-network
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+    command: server /data
+
+  minio-config:
+    image: minio/minio
+    entrypoint: sh
+    command: -c "sh /setup_minio.sh "
+    networks:
+      - minio-network
+    volumes:
+      - "./setup_minio.sh:/setup_minio.sh"
+      - minio_data:/data
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-init-script.sql:/docker-entrypoint-initdb.d/postgres-init-script.sql
+    restart: always
+
+  consul:
+    image: consul:1.15.4
+    network_mode: host
+    container_name: consul
+
+  vault:
+    image: vault:1.13.3
+    container_name: vault
+    networks:
+      - vault-network
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - "8200:8200"
+    volumes:
+      - vault_data:/vault/data
+      - ./config.hcl:/vault/config/config.hcl
+    command: vault server -config=/vault/config/config.hcl
+
+  vaultconfig:
+    image: vault:1.13.3
+    depends_on:
+        - vault
+    container_name: vaultconfig
+    networks:
+      - vault-network
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./scafoldingscript.sh:/vault/scafoldingscript.sh
+      - ./credentials.txt:/vault/credentials.txt:rw
+    environment:
+      - VAULT_ADDR=http://vault:8200
+    command: /vault/scafoldingscript.sh
+
+networks:
+  vault-network:
+    driver: bridge
+  minio-network:
+    driver: bridge
+volumes:
+  vault_data:
+  minio_data:
+
+
