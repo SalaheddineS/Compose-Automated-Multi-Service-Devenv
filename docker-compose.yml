@@ -7,6 +7,8 @@ services:
     depends_on:
       - consul
     container_name: gateway
+    environment:
+        SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME: "consul"
     networks:
       - consul-network
     restart: always
