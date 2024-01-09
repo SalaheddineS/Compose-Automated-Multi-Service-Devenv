@@ -85,8 +85,8 @@ services:
     command: vault server -config=/vault/config/config.hcl
     healthcheck:
       test: "wget --spider --quiet http://localhost:8200 || exit 1"
-      interval: 3s
-      start_period: 5s
+      interval: 5s
+      start_period: 10s
       timeout: 5s
       retries: 1
 
