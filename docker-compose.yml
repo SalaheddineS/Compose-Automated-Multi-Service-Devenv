@@ -1,19 +1,18 @@
 version: '3'
 
 services:
-
   gateway:
     image: salaheddine122/gateway-service:1.0.0
+    container_name: gateway
     depends_on:
       - consul
-    container_name: gateway
     environment:
-        SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME: "consul"
-    networks:
-      - consul-network
-    restart: always
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=consul
+      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=gateway
     ports:
       - "9999:9999"
+    networks:
+      - consul-network
 
   minio:
     image: minio/minio
@@ -70,7 +69,7 @@ services:
     ports:
       - "8500:8500"
       - "8600:8600/udp"
-
+      - "8502:8502"
   vault:
     image: vault:1.13.3
     container_name: vault
