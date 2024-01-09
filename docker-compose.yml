@@ -4,6 +4,8 @@ services:
 
   gateway:
     image: salaheddine122/gateway-service:1.0.0
+    depends_on:
+      - consul
     container_name: gateway
     networks:
       - consul-network
