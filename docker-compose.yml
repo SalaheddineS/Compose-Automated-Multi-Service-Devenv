@@ -7,7 +7,7 @@ services:
     depends_on:
       - consul
     environment:
-      - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=consul
+      - SPRING_CLOUD_CONSUL_HOST=consul
       - SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME=gateway
     ports:
       - "9999:9999"
@@ -89,7 +89,6 @@ services:
       start_period: 10s
       timeout: 5s
       retries: 1
-
 
   vaultconfig:
     image: vault:1.13.3
